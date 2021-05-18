@@ -1,0 +1,14 @@
+docker ps
+
+docker exec -it [6786gdfdfvdf - id of airflow] /bin/bash 
+
+ls
+
+cd /opt/airflow/dags/files/
+
+ls
+
+pwd 
+
+airflow tasks test forex_data_pipeline is_forex_currencies_file_available 2021-01-01
+

@@ -1,0 +1,16 @@
+./start.sh
+
+docker ps 
+
+localhost:8080
+
+login:
+airflow
+pass: airflow 
+
+docker ps 
+
+
+docker exec -it [7438af37bcc9 cua airflow-section-3_airflow] /bin/bash 
+
+airflow tasks test forex_data_pipeline is_forex_rates_available 2021-01-01 

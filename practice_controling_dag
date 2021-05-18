@@ -1,0 +1,11 @@
+airflow trigger_dag example_branch_operator
+
+
+airflow trigger_dag example_branch_operator -e 2019-01-01 
+
+airflow list_dag_runs example_python_operator
+
+airflow list_tasks example_python_operator 
+
+airflow test example_python_operator print_the_context
+

@@ -1,0 +1,100 @@
+1. Airflow needs 3 docker components:
+database
+web server
+scheduler
+
+
+Docker file -> Dokcer image (Airflow) -> Docker compose : -> website
+-> scheduler
+-> DB
+
+
+postgres: 
+	build: './docker/postgres'
+--> the Docker image build in that folder and then it will be used in order to run the postgres
+
+restart: always --> if postgres fail the restart
+
+container_name: postgres 
+ports:
+      - "32769:5432"
+--> we bind the port 5432 from the container with the forein port on your machine and 
+
+environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow_db
+--> Those are env variables will be accessible inside the docker container corresponding 
+
+healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "airflow_db", "-U", "airflow" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+--> to be sure that the container corresposing to progress is running as expected
+######
+airflow:
+	volumes:
+      - ./mnt/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+      - ./mnt/airflow/dags:/usr/local/airflow/dags
+--> with this volume, you can synchronize files from your machine with the look of containers and that's what you are doing 
+ ./mnt/airflow/airflow.cfg:/usr/local/airflow/ --> those modifications will be automatically applied in the same file for cfg
+#############
+What is a dag 
+DAG: Directed Acylic Graph 
+it is a graph with nodes and edges, but the AGs are directed and more importantly, there is no loop 
+
+catchup=False --> prevent from running all the non trigger dag.
+--> sayng that if you dont run all the non trigger dog run between today and the start dat, so that's why usually you will set up the catcher parameter to force to avoid ending  
+
+#############
+
+Operator = Task 
+Python operator
+Bash operator
+Postgres Operator
+
+3 types of Operators:
+1. Action Operator: help you execute somthing: execute python, execut bash command.
+2. Transfer: allow you to transfer data from a source to a destination
+EX: there is a presto to mysql operator 
+--> with the transferal, you dont have to implement the logic to move data between the source and destination by yourself--> just use transfer operator to do that
+3. Sensor operator: you want to wait for a file to land at a specific location in your file system before moving to the next desk. Every 60 seconds, by default, the file sensor will check if the corresponding finding the file you are expecting exists or not.
+If just then it moves forward. if not, then it checks again every 60 seconds.
+--> Sensors allow to verify if a condition is met or not before moving forward.
+
+
+#####
+http_conn_id : corresponds to the connection id, that you are going to create in order to specify the area that you want to check with the htp sensor.
+
+endpoint: is anything that you have after the host
+poke_interval = defines the frequency at which your sensor is going to check if the condition is true or false.
+--> in that case every 5 seconds you are going to verify if the url if API is available or not.
+
+time_out = 20 --> after 20 seconds that the sensor is running you will receive a timeout, and the task will end up in failure. It's important to specify what time it is because you dont want to keep your sensor running forever 
+
+To create a connection you have to run airflow.
+
+run airflow:
+just need to run that script "start.sh"
+restart --> run "restart.sh"
+
+##############
+">>": down stream
+">>": up strean
+Ex: is_forex_rates_available >> is_forex_currencies_file_available >> downloading_rates >> saving_rates
+    saving_rates >> creating_forex_rates_table >> forex_processing 
+    forex_processing >> sending_email_notification >> sending_slack_notification
+
+
+####
+start docker
+./start.sh
+
+####
+stop airflow:
+./stop.sh
+
+###
+# remove docker container 
+docker container rm 4556ee210ae1
