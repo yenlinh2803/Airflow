@@ -98,3 +98,17 @@ stop airflow:
 ###
 # remove docker container 
 docker container rm 4556ee210ae1
+
+
+####
+# PythonOperator param:
+How to pass parameters to PythonOperator in Airflow
+Now we know how to call a Python function, it would be very useful to know how to pass parameters as well to this function using the PythonOperator. There are actually two ways of passing parameters.
+
+First, we can use the op_args parameter which is a list of positional arguments that will get unpacked when calling the callable function.
+Second, we can use the op_kwargs parameter which is a dictionary of keyword arguments that will get unpacked in the callable function.
+
+
+####
+# backfill
+airflow backfill -s 2019-01-20 -e 2019-01-25 --rerun_failed_tasks -B backfill
